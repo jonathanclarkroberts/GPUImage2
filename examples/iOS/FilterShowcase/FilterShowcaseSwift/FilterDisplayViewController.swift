@@ -8,6 +8,7 @@ class FilterDisplayViewController: UIViewController, UISplitViewControllerDelega
 
     @IBOutlet var filterSlider: UISlider?
     @IBOutlet var filterView: RenderView?
+    @IBOutlet var button: UIButton?
     
     let videoCamera:Camera?
     var blendImage:PictureInput?
@@ -83,6 +84,26 @@ class FilterDisplayViewController: UIViewController, UISplitViewControllerDelega
         }
     }
 
+    @IBAction func toggleButton(sender: AnyObject) {
+        if let title = self.button?.currentTitle {
+            do {
+                let captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
+                try captureDevice.lockForConfiguration()
+                if (title == "Turn Torch On") {
+                    self.button?.setTitle("Turn Torch Off", for: UIControlState.normal)
+                    captureDevice.torchMode = .on
+                } else {
+                    self.button?.setTitle("Turn Torch On", for: UIControlState.normal)
+                    captureDevice.torchMode = .off
+                }
+                captureDevice.unlockForConfiguration()
+            }
+            catch let error as NSError {
+                NSLog("\(error), \(error.localizedDescription)")
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureView()

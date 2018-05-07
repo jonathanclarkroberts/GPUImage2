@@ -292,7 +292,7 @@ let filterOperations: Array<FilterOperationInterface> = [
         filterOperationType:.singleInput
     ),
     FilterOperation(
-        filter:{Histogram(type:.rgb)},
+        filter:{Histogram(type:.red)},
         listName:"Histogram",
         titleName:"Histogram",
         sliderConfiguration:.enabled(minimumValue:4.0, maximumValue:32.0, initialValue:16.0),
@@ -302,11 +302,16 @@ let filterOperations: Array<FilterOperationInterface> = [
         filterOperationType:.custom(filterSetupFunction: {(camera, filter, outputView) in
             let castFilter = filter as! Histogram
             let histogramGraph = HistogramDisplay()
-            histogramGraph.overriddenOutputSize = Size(width:256.0, height:330.0)
+            histogramGraph.overriddenOutputSize = Size(width:512.0, height:660.0)
             let blendFilter = AlphaBlend()
-            blendFilter.mix = 0.75
-            camera --> blendFilter
-            camera --> castFilter --> histogramGraph --> blendFilter --> outputView
+            blendFilter.mix = 1.0
+            if (false) {
+                camera --> blendFilter
+                camera --> castFilter --> histogramGraph --> blendFilter --> outputView
+            } else {
+                camera --> blendFilter
+                camera --> castFilter --> blendFilter --> outputView
+            }
             
             return blendFilter
         })
